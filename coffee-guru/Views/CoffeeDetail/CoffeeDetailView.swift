@@ -46,7 +46,7 @@ struct CoffeeDetailView: View {
                             .lineLimit(1)
                     }
                     .frame(height: 44)
-                    .padding(.top, getSafeAreaTop())
+                    .padding(.top, getSafeAreaTop() + 44) // 增加额外的44点高度，避免被首页导航栏遮挡
                     
                     // 咖啡内容
                     VStack(alignment: .leading, spacing: 24) {
