@@ -18,11 +18,35 @@ struct CoffeeDetailView: View {
     
     var body: some View {
         ScrollView {
-            ZStack(alignment: .topLeading) {
+            ZStack(alignment: .top) {
                 VStack(spacing: 0) {
-                    // 添加顶部安全区域
-                    Color.clear
-                        .frame(height: 100) // 为顶部导航栏和状态栏预留空间
+                    // 添加顶部导航栏
+                    ZStack(alignment: .leading) {
+                        // 背景
+                        Rectangle()
+                            .fill(Color.coffeePrimary)
+                            .frame(height: 44)
+                            .edgesIgnoringSafeArea(.top)
+                        
+                        // 返回按钮
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .font(.title3)
+                                .foregroundColor(.white)
+                        }
+                        .padding(.leading, 16)
+                        
+                        // 标题
+                        Text(coffeeName)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .lineLimit(1)
+                    }
+                    .frame(height: 44)
+                    .padding(.top, getSafeAreaTop())
                     
                     // 咖啡内容
                     VStack(alignment: .leading, spacing: 24) {
@@ -180,22 +204,9 @@ struct CoffeeDetailView: View {
                         }
                     }
                     .padding()
-                    .padding(.top, 80)
+                    .padding(.top, 0) // 移除顶部边距，因为已经有导航栏了
                     .padding(.bottom, 30)
                 }
-                
-                // 返回按钮 - 调整位置
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .padding(12)
-                        .background(Circle().fill(Color.coffeePrimary.opacity(0.9)))
-                }
-                .padding()
-                .position(x: 50, y: 60)
             }
         }
         .edgesIgnoringSafeArea(.top)
@@ -298,6 +309,19 @@ struct CoffeeDetailView: View {
             return decoded
         }
         return nil
+    }
+    
+    // 获取安全区域顶部高度的辅助函数
+    private func getSafeAreaTop() -> CGFloat {
+        let keyWindow = UIApplication.shared.connectedScenes
+            .filter { $0.activationState == .foregroundActive }
+            .map { $0 as? UIWindowScene }
+            .compactMap { $0 }
+            .first?.windows
+            .filter { $0.isKeyWindow }
+            .first
+            
+        return keyWindow?.safeAreaInsets.top ?? 0
     }
 }
 

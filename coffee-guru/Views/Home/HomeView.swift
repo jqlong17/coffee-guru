@@ -27,6 +27,10 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("咖啡大师")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarBackground(Color.coffeePrimary, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name("NetworkOfflineNotification"))) { _ in
             // 这个通知接收已经移至ViewModel，但为了兼容性保留
@@ -148,7 +152,7 @@ struct TitleSectionView: View {
             VStack(alignment: .leading, spacing: CoffeeGuru.Dimensions.Padding.small) {
                 Text("咖啡大师")
                     .font(.system(size: CoffeeGuru.Dimensions.FontSize.title, weight: .bold))
-                    .foregroundColor(CoffeeGuru.Theme.Colors.primary)
+                    .foregroundColor(Color(hex: "4E342E"))
                 
                 Text("探索精品咖啡的世界")
                     .font(.system(size: CoffeeGuru.Dimensions.FontSize.body))
