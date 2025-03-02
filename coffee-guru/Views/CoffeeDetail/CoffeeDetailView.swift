@@ -19,7 +19,11 @@ struct CoffeeDetailView: View {
     var body: some View {
         ScrollView {
             ZStack(alignment: .topLeading) {
-                VStack {
+                VStack(spacing: 0) {
+                    // 添加顶部安全区域
+                    Color.clear
+                        .frame(height: 100) // 为顶部导航栏和状态栏预留空间
+                    
                     // 咖啡内容
                     VStack(alignment: .leading, spacing: 24) {
                         if isLoading {
@@ -40,6 +44,7 @@ struct CoffeeDetailView: View {
                                 Text(detail.name)
                                     .font(.system(size: 28, weight: .bold))
                                     .foregroundColor(.coffeePrimary)
+                                    .padding(.top, 20)
                                 
                                 // 星级评分
                                 HStack {
@@ -175,7 +180,7 @@ struct CoffeeDetailView: View {
                         }
                     }
                     .padding()
-                    .padding(.top, 60)
+                    .padding(.top, 80)
                     .padding(.bottom, 30)
                 }
                 
@@ -190,11 +195,12 @@ struct CoffeeDetailView: View {
                         .background(Circle().fill(Color.coffeePrimary.opacity(0.9)))
                 }
                 .padding()
-                .position(x: 50, y: 40)
+                .position(x: 50, y: 60)
             }
         }
         .edgesIgnoringSafeArea(.top)
         .background(Color.white)
+        .navigationBarHidden(true)
         .onAppear {
             // 先检查缓存
             if let cachedDetail = loadCachedCoffeeDetail(for: coffeeName) {
