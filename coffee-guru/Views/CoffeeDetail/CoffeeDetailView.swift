@@ -33,19 +33,6 @@ struct CoffeeDetailView: View {
                             .frame(width: 150, height: 150)
                     }
                     
-                    // 返回按钮
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                            .padding(12)
-                            .background(Circle().fill(Color.black.opacity(0.6)))
-                    }
-                    .padding()
-                    .position(x: 50, y: 50)
-                    
                     // 咖啡内容
                     VStack(alignment: .leading, spacing: 24) {
                         if isLoading {
@@ -217,6 +204,19 @@ struct CoffeeDetailView: View {
                     .padding()
                     .padding(.bottom, 30)
                 }
+                
+                // 返回按钮 - 移到ZStack顶层，确保它位于正确的位置
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .padding(12)
+                        .background(Circle().fill(Color.black.opacity(0.6)))
+                }
+                .padding()
+                .position(x: 50, y: 50)
             }
         }
         .edgesIgnoringSafeArea(.top)
