@@ -2,14 +2,6 @@ import SwiftUI
 import Combine
 import Foundation
 
-// MARK: - 数组扩展
-extension Array {
-    /// 安全地访问数组元素，如果索引越界则返回 nil
-    subscript(safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
-    }
-}
-
 // 首页视图模型
 class HomeViewModel: ObservableObject {
     // MARK: - 发布的状态属性
