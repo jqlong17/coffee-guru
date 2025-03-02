@@ -3,56 +3,40 @@ import Combine
 
 struct ContentView: View {
     @State private var selectedTab = 0
-    @State private var isLoading = true
     
     var body: some View {
-        ZStack {
-            if isLoading {
-                // 启动画面
-                SplashView()
-                    .onAppear {
-                        // 延迟加载主界面
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                            withAnimation {
-                                self.isLoading = false
-                            }
-                        }
-                    }
-            } else {
-                // 主标签视图
-                TabView(selection: $selectedTab) {
-                    HomeView()
-                        .tabItem {
-                            Image(systemName: "cup.and.saucer.fill")
-                            Text("首页")
-                        }
-                        .tag(0)
-                    
-                    ToolsView()
-                        .tabItem {
-                            Image(systemName: "hammer.fill")
-                            Text("工具")
-                        }
-                        .tag(1)
-                    
-                    ProfileView()
-                        .tabItem {
-                            Image(systemName: "person.fill")
-                            Text("我的")
-                        }
-                        .tag(2)
+        // 主标签视图
+        TabView(selection: $selectedTab) {
+            HomeView()
+                .tabItem {
+                    Image(systemName: "cup.and.saucer.fill")
+                    Text("首页")
                 }
-                .accentColor(.coffeePrimary)
-                .onChange(of: selectedTab) { oldValue, newValue in
-                    let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                    impactMed.impactOccurred()
+                .tag(0)
+            
+            ToolsView()
+                .tabItem {
+                    Image(systemName: "hammer.fill")
+                    Text("工具")
                 }
-            }
+                .tag(1)
+            
+            ProfileView()
+                .tabItem {
+                    Image(systemName: "person.fill")
+                    Text("我的")
+                }
+                .tag(2)
+        }
+        .accentColor(.coffeePrimary)
+        .onChange(of: selectedTab) { oldValue, newValue in
+            let impactMed = UIImpactFeedbackGenerator(style: .medium)
+            impactMed.impactOccurred()
         }
     }
 }
 
-// 启动画面
+// 保留SplashView的定义，但不再使用它
 struct SplashView: View {
     @State private var coffeeRotation = false
     
@@ -71,9 +55,10 @@ struct SplashView: View {
                         Circle()
                             .fill(Color.white.opacity(0.1))
                     )
-                    .rotationEffect(Angle(degrees: coffeeRotation ? 360 : 0))
+                    .scaleEffect(coffeeRotation ? 1.0 : 0.8)
+                    .opacity(coffeeRotation ? 1.0 : 0.0)
                     .onAppear {
-                        withAnimation(Animation.linear(duration: 2).repeatForever(autoreverses: false)) {
+                        withAnimation(Animation.easeInOut(duration: 1.2)) {
                             coffeeRotation = true
                         }
                     }
@@ -81,12 +66,12 @@ struct SplashView: View {
                 Text("咖啡大师")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(.coffeePrimary)
-                    .padding(.top, 20)
+                    .foregroundColor(Color(hex: "4E342E"))
+                    .padding(.top, 10)
                 
                 Text("您的私人咖啡顾问")
                     .font(.title3)
-                    .foregroundColor(.coffeeSecondary)
+                    .foregroundColor(Color(hex: "5D4037"))
             }
         }
     }
