@@ -29,8 +29,15 @@ struct ZhipuChoice: Decodable {
 class ZhipuNetworkManager {
     static let shared = ZhipuNetworkManager()
     
-    // 使用规则中提供的API密钥
-    private let apiKey = "d970f626f5834a2182f232a15c6604f9.VfLaEaHdkNWo4wvr"
+    // 从环境变量获取API密钥，如果不存在则使用备用密钥
+    private let apiKey: String = {
+        if let envKey = ProcessInfo.processInfo.environment["ZHIPU_API_KEY"], !envKey.isEmpty {
+            return envKey
+        } else {
+            print("警告: 未找到ZHIPU_API_KEY环境变量，使用备用密钥")
+            return "d970f626f5834a2182f232a15c6604f9.VfLaEaHdkNWo4wvr" // 备用密钥
+        }
+    }()
     private let baseURL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
     private let flashModel = "glm-4-flash" // 智谱的flash免费模型
     
@@ -46,6 +53,7 @@ class ZhipuNetworkManager {
     
     private init() {
         setupNetworkMonitoring()
+        checkAPIKeySource()
     }
     
     private func setupNetworkMonitoring() {
@@ -70,6 +78,15 @@ class ZhipuNetworkManager {
             }
         }
         networkMonitor.start(queue: monitorQueue)
+    }
+    
+    // 检查API密钥来源
+    private func checkAPIKeySource() {
+        if ProcessInfo.processInfo.environment["ZHIPU_API_KEY"] != nil {
+            print("✅ 成功从环境变量加载ZHIPU_API_KEY")
+        } else {
+            print("⚠️ 未找到ZHIPU_API_KEY环境变量，使用备用密钥")
+        }
     }
     
     // 处理待处理的请求
