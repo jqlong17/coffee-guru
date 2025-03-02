@@ -1,0 +1,22 @@
+---
+description: rule
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+
+1.你不要随便使用模拟数据或者硬编码，除非是用户要求你这么做；请不要使用默认数据，我没法排查大模型api相关的错误；
+2.这是一个ios项目
+3.所有的咖啡相关的数据我们都将使用zhipu 大模型的api的免费模型flash来实现
+ZHIPU_API_KEY=d970f626f5834a2182f232a15c6604f9.VfLaEaHdkNWo4wvr
+
+模型	简介	单价	Batch API 定价
+GLM-4-Flash	语言模型	免费	免费
+GLM-4V-Flash	图像理解	免费	不支持
+CogView-3-Flash	图像生成	免费	不支持
+CogVideoX-Flash	视频生成	免费	不支持
+
+每次修改完代码都更新下coffee-guru/README.md中的代码架构和代码目录。
+
+永远使用edit_file工具来编辑文件
