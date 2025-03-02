@@ -20,19 +20,6 @@ struct CoffeeDetailView: View {
         ScrollView {
             ZStack(alignment: .topLeading) {
                 VStack {
-                    // 顶部图片
-                    ZStack {
-                        Rectangle()
-                            .fill(Color.coffeeLightBrown.opacity(0.3))
-                            .frame(height: 250)
-                        
-                        Image(systemName: "cup.and.saucer.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.coffeeAccent)
-                            .frame(width: 150, height: 150)
-                    }
-                    
                     // 咖啡内容
                     VStack(alignment: .leading, spacing: 24) {
                         if isLoading {
@@ -62,20 +49,6 @@ struct CoffeeDetailView: View {
                                     }
                                     
                                     Spacer()
-                                    
-                                    // 分享按钮
-                                    Button(action: {
-                                        shareCoffee(detail)
-                                    }) {
-                                        Label("分享", systemImage: "square.and.arrow.up")
-                                            .foregroundColor(.white)
-                                            .padding(.horizontal, 16)
-                                            .padding(.vertical, 8)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 20)
-                                                    .fill(Color.coffeeAccent)
-                                            )
-                                    }
                                 }
                                 
                                 // 咖啡描述
@@ -202,10 +175,11 @@ struct CoffeeDetailView: View {
                         }
                     }
                     .padding()
+                    .padding(.top, 60)
                     .padding(.bottom, 30)
                 }
                 
-                // 返回按钮 - 移到ZStack顶层，确保它位于正确的位置
+                // 返回按钮 - 调整位置
                 Button(action: {
                     dismiss()
                 }) {
@@ -213,10 +187,10 @@ struct CoffeeDetailView: View {
                         .font(.title2)
                         .foregroundColor(.white)
                         .padding(12)
-                        .background(Circle().fill(Color.black.opacity(0.6)))
+                        .background(Circle().fill(Color.coffeePrimary.opacity(0.9)))
                 }
                 .padding()
-                .position(x: 50, y: 50)
+                .position(x: 50, y: 40)
             }
         }
         .edgesIgnoringSafeArea(.top)
@@ -301,87 +275,6 @@ struct CoffeeDetailView: View {
                     print("❌ 获取详情数据失败: \(coffeeName)")
                 }
             }
-        }
-    }
-    
-    // 分享咖啡信息
-    private func shareCoffee(_ detail: CoffeeDetail) {
-        var shareText = """
-        ☕ \(detail.name)
-        
-        \(detail.description)
-        
-        产地: \(detail.origin)
-        风味: \(detail.flavor)
-        历史: \(detail.history.count > 100 ? detail.history.prefix(100) + "..." : detail.history)
-        价格: \(detail.price)
-        烘焙: \(detail.roastLevel)
-        评分: \(String(repeating: "⭐", count: Int(detail.rating)))
-        """
-        
-        // 添加烘焙细节到分享内容
-        if let roasting = detail.roastingDetails {
-            shareText += """
-            
-            
-            【烘焙细节】
-            一爆时间: \(roasting.firstCrackTime)
-            二爆时间: \(roasting.secondCrackTime)
-            总烘焙时间: \(roasting.totalRoastTime)
-            """
-            if !roasting.roastingCurve.isEmpty {
-                shareText += "\n烘焙曲线: \(roasting.roastingCurve)"
-            }
-            if !roasting.roastingNotes.isEmpty {
-                shareText += "\n烘焙注意: \(roasting.roastingNotes)"
-            }
-        } else {
-            shareText += "\n\n【烘焙细节】\n数据暂不可用"
-        }
-        
-        // 添加冲煮指南到分享内容
-        if let brewing = detail.brewingGuide {
-            shareText += """
-            
-            
-            【冲煮指南】
-            水粉比: \(brewing.coffeeToWaterRatio)
-            水温: \(brewing.waterTemperature)
-            研磨度: \(brewing.groundSize)
-            总时间: \(brewing.totalBrewTime)
-            """
-            
-            // 添加特别注意事项
-            if !brewing.specialNotes.isEmpty {
-                shareText += "\n特别注意: \(brewing.specialNotes)"
-            }
-            
-            // 添加注水阶段
-            if !brewing.pourStages.isEmpty {
-                shareText += "\n\n分步冲煮:"
-                for (index, stage) in brewing.pourStages.enumerated() {
-                    shareText += "\n\(index + 1). \(stage.stageName): 水量\(stage.waterAmount), 注水\(stage.pourTime), 等待\(stage.waitTime)"
-                    if !stage.purpose.isEmpty {
-                        shareText += " - \(stage.purpose)"
-                    }
-                }
-            }
-        } else {
-            shareText += "\n\n【冲煮指南】\n数据暂不可用"
-        }
-        
-        // 添加价格
-        if !detail.price.isEmpty {
-            shareText += "\n\n价格范围: \(detail.price)"
-        }
-        
-        shareText += "\n\n- 来自咖啡大师应用"
-        
-        let activityVC = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = windowScene.windows.first?.rootViewController {
-            rootViewController.present(activityVC, animated: true)
         }
     }
     
